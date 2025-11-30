@@ -53,35 +53,34 @@ class myLoadDS(Dataset):
         if ralph is not None:
             self.ralph = ralph
         elif dataset is not None:
-            match dataset:
-                case 'iam':
-                    self.ralph = {
-                        idx: char for idx, char in enumerate(
-                            ' !"#&\'()*+,-./0123456789:;?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-                        )
-                    }
-                case 'lam':
-                    self.ralph = {
-                        idx: char for idx, char in enumerate(
-                            ' !"#%&\'()+,-./0123456789:;=?ABCDEFGHIJKLMNOPQRSTUVWXZabcdefghijlmnopqrstuvwxyz|°·ÈÉàèéìòù–'
-                        )
-                    }
-                case 'read2016':
-                    self.ralph = {
-                        idx: char for idx, char in enumerate(
-                            ' ()+,-./0123456789:<>ABCDEFGHIJKLMNOPQRSTUVWYZ[]abcdefghijklmnopqrstuvwxyz¾Ößäöüÿāēōūȳ̄̈—'
-                        )
-                    }
-                case 'vnondb':
-                    self.ralph = {
-                        idx: char for idx, char in enumerate(
-                            ' !"%&()*,-./0123456789:;?ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvxyzÀÁÂÔÚÝàáâãèéêìíòóôõùúýĂăĐđĩũƠơƯưạẢảẤấẦầẩẫậắằẳẵặẹẻẽếỀềỂểễỆệỉịọỏỐốỒồổỗộớờỞởỡợụỦủứừửữựỳỷỹ'
-                        )
-                    }
-                case _:
-                    alph = get_alphabet(self.tlbls)
-                    self.ralph = dict(zip(alph.values(), alph.keys()))
-                    self.alph = alph
+            if dataset == 'iam':
+                self.ralph = {
+                    idx: char for idx, char in enumerate(
+                        ' !"#&\'()*+,-./0123456789:;?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+                    )
+                }
+            elif dataset == 'lam':
+                self.ralph = {
+                    idx: char for idx, char in enumerate(
+                        ' !"#%&\'()+,-./0123456789:;=?ABCDEFGHIJKLMNOPQRSTUVWXZabcdefghijlmnopqrstuvwxyz|°·ÈÉàèéìòù–'
+                    )
+                }
+            elif dataset == 'read2016':
+                self.ralph = {
+                    idx: char for idx, char in enumerate(
+                        ' ()+,-./0123456789:<>ABCDEFGHIJKLMNOPQRSTUVWYZ[]abcdefghijklmnopqrstuvwxyz¾Ößäöüÿāēōūȳ̄̈—'
+                    )
+                }
+            elif dataset == 'vnondb':
+                self.ralph = {
+                    idx: char for idx, char in enumerate(
+                        ' !"%&()*,-./0123456789:;?ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvxyzÀÁÂÔÚÝàáâãèéêìíòóôõùúýĂăĐđĩũƠơƯưạẢảẤấẦầẩẫậắằẳẵặẹẻẽếỀềỂểễỆệỉịọỏỐốỒồổỗộớờỞởỡợụỦủứừửữựỳỷỹ'
+                    )
+                }
+            else:
+                alph = get_alphabet(self.tlbls)
+                self.ralph = dict(zip(alph.values(), alph.keys()))
+                self.alph = alph
         else:
             alph = get_alphabet(self.tlbls)
             self.ralph = dict(zip(alph.values(), alph.keys()))
