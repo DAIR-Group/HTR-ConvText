@@ -1,24 +1,49 @@
 # HTR-ConvText
 
-### Introduction
+<div align="center"> <img src="image/architecture.png" alt="HTR-ConvText Architecture" width="800"/> </div>
 
-This is our official implementation for "HTR-Convtext: Using Convolution and Textual Information for Handwritten Text Recognition".
+<p align="center"> <a href="https://huggingface.co/DAIR-Group/HTR-ConvText"> <img alt="Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue"> </a> <a href="https://github.com/DAIR-Group/HTR-ConvText/blob/main/LICENSE"> <img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-green"> </a> <a href="https://arxiv.org/abs/2512.05021"> <img alt="arXiv" src="https://img.shields.io/badge/arXiv-2512.05021-b31b1b.svg"> </a> <a href="https://github.com/DAIR-Group/HTR-ConvText"> <img alt="GitHub" src="https://img.shields.io/badge/GitHub-Repo-181717.svg"> </a> </p>
 
-## Table of Contents
-- [1. Overview](#1-overview)
-- [2. Installation](#2-installation)
-- [3. Quick Start](#3-quick-start)
-- [4. Acknowledgement](#4-acknowledgement)
+## Highlights
 
-## 1. Overview
+HTR-ConvText is a novel hybrid architecture for Handwritten Text Recognition (HTR) that effectively balances local feature extraction with global contextual modeling. Designed to overcome the limitations of standard CTC-based decoding and data-hungry Transformers, HTR-ConvText delivers state-of-the-art performance with the following key features:
 
-HTR-ConvText is a data-efficient, hybrid architecture for offline Handwritten Text Recognition that combines the local inductive bias of CNNs with the global context of Vision Transformers. At its core is the ConvText Encoder, a hierarchical design that interleaves Multi-Head Self-Attention with depthwise convolutions to capture both fine-grained stroke details and long-range dependencies. To overcome the linguistic limitations of standard CTC decoding, we introduce Textual Context Module (TCM) that injects surronding characters information into the visual encoder without increasing inference latency. The result is a fast, robust model that achieves state-of-the-art performance on English (IAM), German (READ), Italian (LAM), and complex Vietnamese (HANDS-VNOnDB) datasets without the need for massive synthetic pre-training.
+- **Hybrid CNN-ViT Architecture**: Seamlessly integrates a ResNet backbone with MobileViT blocks (MVP) and Conditional Positional Encoding, enabling the model to capture fine-grained stroke details while maintaining global spatial awareness.
+- **Hierarchical ConvText Encoder**: A U-Net-like encoder structure that interleaves Multi-Head Self-Attention with Depthwise Convolutions. This design efficiently models both long-range dependencies and local structural patterns.
+- **Textual Context Module (TCM)**: An innovative training-only auxiliary module that injects bidirectional linguistic priors into the visual encoder. This mitigates the conditional independence weakness of CTC decoding without adding any latency during inference.
+- **State-of-the-Art Performance**: Outperforms existing methods on major benchmarks including IAM (English), READ2016 (German), LAM (Italian), and HANDS-VNOnDB (Vietnamese), specifically excelling in low-resource scenarios and complex diacritics.
 
-![Overall Architecture](image/architecture.png)
+## Model Overview
 
-## 2. Installation
+HTR-ConvText configurations and specifications:
 
-### 2.1 Environment
+| Feature             | Specification                                       |
+| ------------------- | --------------------------------------------------- |
+| Architecture Type   | Hybrid CNN + Vision Transformer (Encoder-Only)      |
+| Parameters          | ~65.9M                                              |
+| Backbone            | ResNet-18 + MobileViT w/ Positional Encoding (MVP)  |
+| Encoder Layers      | 8 ConvText Blocks (Hierarchical)                    |
+| Attention Heads     | 8                                                   |
+| Embedding Dimension | 512                                                 |
+| Image Input Size    | 512×64                                              |
+| Inference Strategy  | Standard CTC Decoding (TCM is removed at inference) |
+
+For more details, including ablation studies and theoretical proofs, please refer to our Technical Report.
+
+## Performance
+
+We evaluated HTR-ConvText across four diverse datasets. The model achieves new SOTA results with the lowest Character Error Rate (CER) and Word Error Rate (WER) without requiring massive synthetic pre-training.
+
+| Dataset   | Language    | Ours CER (%) | HTR-VT | OrigamiNet | TrOCR | CRNN  |
+|-----------|-------------|--------------|--------|------------|-------|-------|
+| IAM       | English     | 4.0          | 4.7    | 4.8        | 7.3   | 7.8   |
+| LAM       | Italian     | 2.7          | 2.8    | 3.0        | 3.6   | 3.8   |
+| READ2016  | German      | 3.6          | 3.9    | -          | -     | 4.7   |
+| VNOnDB    | Vietnamese  | 3.45         | 4.26   | 7.6        | -     | 10.53 |
+
+## Quickstart
+
+### Instalation
 
 1. **Clone the repository**
    ```cmd
@@ -41,125 +66,75 @@ HTR-ConvText is a data-efficient, hybrid architecture for offline Handwritten Te
 
 The code was tested on Python 3.9 and PyTorch 2.9.1.
 
-### 2.2 Datasets
+### Data Preparation
 
-We provide our split `train.ln`, `val.ln`, and `test.ln` files for each of the dataset used under `data/{iam,read2016,lam,vnondb}/`. Point `--*-data-list` to these paths or duplicate them into your own dataset directory structure.
+We provide split files (train.ln, val.ln, test.ln) for IAM, READ2016, LAM, and VNOnDB under data/. Organize your data as follows:
 
-The structure of the file should be:
 ```
 ./data/iam/
 ├── train.ln
 ├── val.ln
 ├── test.ln
 └── lines
-      ├──a01-000u-00.png
-      ├──a01-000u-00.txt
-      ├──a01-000u-01.png
-      ├──a01-000u-01.txt
-      ...
+      ├── a01-000u-00.png
+      ├── a01-000u-00.txt
+      └── ...
 ```
 
-**Dataset overview.**
+### Training
 
-| Dataset   | Training | Validation | Test  | Language    | Charset | Download |
-|-----------|---------:|-----------:|------:|-------------|--------:|:--------:|
-| IAM       |    6,482 |        976 | 2,915 | English     |      79 | [Source](https://fki.tic.heia-fr.ch/databases/download-the-iam-handwriting-database) |
-| READ2016  |    8,349 |      1,040 | 1,138 | German      |      89 | [Source](https://zenodo.org/record/1164045) |
-| LAM       |   19,830 |      2,470 | 3,523 | Italian     |      90 | [Source](https://aimagelab.ing.unimore.it/imagelab/page.asp?IdPage=46) |
-| VNOnDB    |    4,433 |      1,229 | 1,634 | Vietnamese  |     161 | [Source](https://tc11.cvc.uab.es/datasets/HANDS-VNOnDB_1/) |
+We provide comprehensive scripts in the ./run/ directory. To train on the IAM dataset with the Textual Context Module (TCM) enabled:
 
+```
+# Using the provided script
+bash run/iam.sh
 
-**Supported alphabets (`--dataset`).** Character sets and class counts are pre-defined:
-
-| Flag       | Description                  | `nb_cls` |
-| ---------- | ---------------------------- | -------- |
-| `iam`      | IAM Handwriting Database     | 80       |
-| `read2016` | ICDAR 2016 READ lines        | 90       |
-| `lam`      | Lam Vietnamese corpus        | 91       |
-| `vnondb`   | VNOnDB historical Vietnamese | 162      |
-
-
-**Custom data checklist.**
-1. Arrange line crops and `.txt` files together (one transcript per image).
-2. Generate `*.ln` lists pointing to the images; follow the provided templates if you need a reference.
-3. Set `--data-path`, `--train-data-list`, `--val-data-list`, and `--test-data-list` accordingly.
-4. Extend `data/dataset.py` with your alphabet if it differs from the presets.
-
-## 3. Quick Start
-
-We provide convenient and comprehensive commands in `./run/` to train and test on different datasets, helping researchers reproduce the paper’s results.
-
-### 3.1 Train using provided scripts
-- IAM: `bash run/iam.sh`
-- READ2016: `bash run/read2016.sh`
-- LAM: `bash run/lam.sh`
-- VNOnDB: `bash run/vnondb.sh`
-
-Example (Windows cmd.exe, IAM) — flags mirror `run/iam.sh`:
-```cmd
-python train.py ^
-    --use-wandb ^
-    --dataset iam ^
-    --tcm-enable ^
-    --exp-name "htr-convtext" ^
-    --wandb-project iam ^
-    --num-workers 4 ^
-    --max-lr 1e-3 ^
-    --warm-up-iter 1000 ^
-    --weight-decay 0.05 ^
-    --train-bs 32 ^
-    --val-bs 8 ^
-    --max-span-length 8 ^
-    --mask-ratio 0.4 ^
-    --attn-mask-ratio 0.1 ^
-    --img-size 512 64 ^
-    --proj 8 ^
-    --dila-ero-max-kernel 2 ^
-    --dila-ero-iter 1 ^
-    --proba 0.5 ^
-    --alpha 1 ^
-    --total-iter 100001 ^
-    --data-path D:/datasets/iam/lines/ ^
-    --train-data-list D:/datasets/iam/train.ln ^
-    --val-data-list D:/datasets/iam/val.ln ^
-    --test-data-list D:/datasets/iam/test.ln ^
+# OR running directly via Python
+python train.py \
+    --use-wandb \
+    --dataset iam \
+    --tcm-enable \
+    --exp-name "htr-convtext-iam" \
+    --img-size 512 64 \
+    --train-bs 32 \
+    --val-bs 8 \
+    --data-path /path/to/iam/lines/ \
+    --train-data-list data/iam/train.ln \
+    --val-data-list data/iam/val.ln \
+    --test-data-list data/iam/test.ln \
     --nb-cls 80
 ```
 
-### 3.2 Evaluate checkpoints
-- Use the matching test script in `./run/` or call `test.py` directly:
-```cmd
-python test.py ^
-    --resume ./best_CER.pth
-    --use-wandb ^
-    --dataset iam ^
-    --tcm-enable ^
-    --exp-name "htr-convtext" ^
-    --wandb-project iam ^
-    --num-workers 4 ^
-    --max-lr 1e-3 ^
-    --warm-up-iter 1000 ^
-    --weight-decay 0.05 ^
-    --train-bs 32 ^
-    --val-bs 8 ^
-    --max-span-length 8 ^
-    --mask-ratio 0.4 ^
-    --attn-mask-ratio 0.1 ^
-    --img-size 512 64 ^
-    --proj 8 ^
-    --dila-ero-max-kernel 2 ^
-    --dila-ero-iter 1 ^
-    --proba 0.5 ^
-    --alpha 1 ^
-    --total-iter 100001 ^
-    --data-path D:/datasets/iam/lines/ ^
-    --train-data-list D:/datasets/iam/train.ln ^
-    --val-data-list D:/datasets/iam/val.ln ^
-    --test-data-list D:/datasets/iam/test.ln ^
+### Inference / Evaluation
+
+To evaluate a pre-trained checkpoint on the test set:
+
+```
+python test.py \
+    --resume ./checkpoints/best_CER.pth \
+    --dataset iam \
+    --img-size 512 64 \
+    --data-path /path/to/iam/lines/ \
+    --test-data-list data/iam/test.ln \
     --nb-cls 80
 ```
 
-## 4. Acknowledgement
-This repo and project was inspired and adapted from [HTR-VT](https://github.com/Intellindust-AI-Lab/HTR-VT)
+## Citation
 
-We gratefully acknowledge the authors for making their work publicly available, which has greatly supported the development of our project.
+If you find our work helpful, please cite our paper:
+
+```
+@misc{truc2025htrconvtex,
+      title={HTR-ConvText: Leveraging Convolution and Textual Information for Handwritten Text Recognition},
+      author={Pham Thach Thanh Truc and Dang Hoai Nam and Huynh Tong Dang Khoa and Vo Nguyen Le Duy},
+      year={2025},
+      eprint={2512.05021},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2512.05021},
+}
+```
+
+## Acknowledgement
+
+This project is inspired by and adapted from [HTR-VT](https://github.com/Intellindust-AI-Lab/HTR-VT). We gratefully acknowledge the authors for their open-source contributions.
