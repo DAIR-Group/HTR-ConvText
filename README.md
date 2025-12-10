@@ -2,7 +2,20 @@
 
 <div align="center"> <img src="image/architecture.png" alt="HTR-ConvText Architecture" width="800"/> </div>
 
-<p align="center"> <a href="https://huggingface.co/DAIR-Group/HTR-ConvText"> <img alt="Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue"> </a> <a href="https://github.com/DAIR-Group/HTR-ConvText/blob/main/LICENSE"> <img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-green"> </a> <a href="https://arxiv.org/abs/2512.05021"> <img alt="arXiv" src="https://img.shields.io/badge/arXiv-2512.05021-b31b1b.svg"> </a> <a href="https://github.com/DAIR-Group/HTR-ConvText"> <img alt="GitHub" src="https://img.shields.io/badge/GitHub-Repo-181717.svg"> </a> </p>
+<p align="center"> 
+  <a href="https://huggingface.co/DAIR-Group/HTR-ConvText"> 
+    <img alt="Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue"> 
+  </a>
+  <a href="https://github.com/DAIR-Group/HTR-ConvText"> 
+    <img alt="GitHub" src="https://img.shields.io/badge/GitHub-Repo-181717.svg?logo=github&logoColor=white"> 
+  </a> 
+  <a href="https://github.com/DAIR-Group/HTR-ConvText/blob/main/LICENSE"> 
+    <img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-green"> 
+  </a> 
+  <a href="https://arxiv.org/abs/2512.05021"> 
+    <img alt="arXiv" src="https://img.shields.io/badge/arXiv-2512.05021-b31b1b.svg"> 
+  </a>
+</p>
 
 ## Highlights
 
@@ -28,7 +41,7 @@ HTR-ConvText configurations and specifications:
 | Image Input Size    | 512×64                                              |
 | Inference Strategy  | Standard CTC Decoding (TCM is removed at inference) |
 
-For more details, including ablation studies and theoretical proofs, please refer to our Technical Report.
+For more details, including ablation studies and theoretical proofs, please refer to our [Technical Report](https://arxiv.org/pdf/2512.05021).
 
 ## Performance
 
