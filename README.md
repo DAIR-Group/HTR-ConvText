@@ -1,4 +1,4 @@
-# HTR-ConvText
+# HTR-ConvText: Leveraging Convolution and Textual Information for Handwritten Text Recognition
 
 <div align="center"> <img src="image/architecture.png" alt="HTR-ConvText Architecture" width="800"/> </div>
 
