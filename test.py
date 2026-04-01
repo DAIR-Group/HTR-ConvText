@@ -40,18 +40,15 @@ def main():
     model = model.cuda()
 
     logger.info('Loading test loader...')
-    train_dataset = dataset.myLoadDS(
-        args.train_data_list, args.data_path, args.img_size, dataset=args.dataset)
-
     test_dataset = dataset.myLoadDS(
-        args.test_data_list, args.data_path, args.img_size, ralph=train_dataset.ralph, dataset=args.dataset)
+        args.test_data_list, args.data_path, args.img_size, dataset=args.dataset)
     test_loader = torch.utils.data.DataLoader(test_dataset,
                                               batch_size=args.val_bs,
                                               shuffle=False,
                                               pin_memory=True,
                                               num_workers=args.num_workers)
 
-    converter = utils.CTCLabelConverter(train_dataset.ralph.values())
+    converter = utils.CTCLabelConverter(test_dataset.ralph.values())
     criterion = torch.nn.CTCLoss(
         reduction='none', zero_infinity=True).to(device)
 
