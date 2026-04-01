@@ -2,18 +2,18 @@
 
 <div align="center"> <img src="image/architecture.png" alt="HTR-ConvText Architecture" width="800"/> </div>
 
-<p align="center"> 
-  <a href="https://huggingface.co/DAIR-Group/HTR-ConvText"> 
-    <img alt="Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue"> 
+<p align="center">
+  <a href="https://huggingface.co/DAIR-Group/HTR-ConvText">
+    <img alt="Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue">
   </a>
-  <a href="https://github.com/DAIR-Group/HTR-ConvText"> 
-    <img alt="GitHub" src="https://img.shields.io/badge/GitHub-Repo-181717.svg?logo=github&logoColor=white"> 
-  </a> 
-  <a href="https://github.com/DAIR-Group/HTR-ConvText/blob/main/LICENSE"> 
-    <img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-green"> 
-  </a> 
-  <a href="https://arxiv.org/abs/2512.05021"> 
-    <img alt="arXiv" src="https://img.shields.io/badge/arXiv-2512.05021-b31b1b.svg"> 
+  <a href="https://github.com/DAIR-Group/HTR-ConvText">
+    <img alt="GitHub" src="https://img.shields.io/badge/GitHub-Repo-181717.svg?logo=github&logoColor=white">
+  </a>
+  <a href="https://github.com/DAIR-Group/HTR-ConvText/blob/main/LICENSE">
+    <img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-green">
+  </a>
+  <a href="https://arxiv.org/abs/2512.05021">
+    <img alt="arXiv" src="https://img.shields.io/badge/arXiv-2512.05021-b31b1b.svg">
   </a>
 </p>
 
@@ -47,12 +47,12 @@ For more details, including ablation studies and theoretical proofs, please refe
 
 We evaluated HTR-ConvText across four diverse datasets. The model achieves new SOTA results with the lowest Character Error Rate (CER) and Word Error Rate (WER) without requiring massive synthetic pre-training.
 
-| Dataset   | Language    | Ours CER (%) | HTR-VT | OrigamiNet | TrOCR | CRNN  |
-|-----------|-------------|--------------|--------|------------|-------|-------|
-| IAM       | English     | 4.0          | 4.7    | 4.8        | 7.3   | 7.8   |
-| LAM       | Italian     | 2.7          | 2.8    | 3.0        | 3.6   | 3.8   |
-| READ2016  | German      | 3.6          | 3.9    | -          | -     | 4.7   |
-| VNOnDB    | Vietnamese  | 3.45         | 4.26   | 7.6        | -     | 10.53 |
+| Dataset  | Language   | Ours CER (%) | HTR-VT | OrigamiNet | TrOCR | CRNN  |
+| -------- | ---------- | ------------ | ------ | ---------- | ----- | ----- |
+| IAM      | English    | 4.0          | 4.7    | 4.8        | 7.3   | 7.8   |
+| LAM      | Italian    | 2.7          | 2.8    | 3.0        | 3.6   | 3.8   |
+| READ2016 | German     | 3.6          | 3.9    | -          | -     | 4.7   |
+| VNOnDB   | Vietnamese | 3.45         | 4.26   | 7.6        | -     | 10.53 |
 
 ## Quickstart
 
@@ -109,8 +109,8 @@ python train.py \
     --tcm-enable \
     --exp-name "htr-convtext-iam" \
     --img-size 512 64 \
-    --train-bs 32 \
-    --val-bs 8 \
+    --train-bs 64 \
+    --val-bs 16 \
     --data-path /path/to/iam/lines/ \
     --train-data-list data/iam/train.ln \
     --val-data-list data/iam/val.ln \
