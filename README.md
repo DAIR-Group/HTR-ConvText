@@ -1,6 +1,6 @@
 # HTR-ConvText: Leveraging Convolution and Textual Information for Handwritten Text Recognition
 
-<div align="center"> <img src="image/architecture.png" alt="HTR-ConvText Architecture" width="800"/> </div>
+<div align="center"> <img src="image/full.png" alt="HTR-ConvText Architecture" width="800"/> </div>
 
 <p align="center">
   <a href="https://huggingface.co/DAIR-Group/HTR-ConvText">
@@ -53,19 +53,9 @@ We evaluated HTR-ConvText across IAM, LAM, READ2016, VNOnDB, and SCAM-A. The SCA
 | LAM      | Italian    | 2.7          | 2.8    | 3.0        | 3.6   | 3.8   |
 | READ2016 | German     | 3.6          | 3.9    | -          | -     | 4.7   |
 | VNOnDB   | Vietnamese | 3.45         | 4.26   | 7.6        | -     | 10.53 |
-| SCAM-A   | Coptic     | 11.67        | -      | -          | -     | -     |
+| SCAM-A   | Coptic     | 11.67        | 15.24  | -          | 18.57 | 13.91 |
 
-SCAM-A comparison (SCAM-A → SCAM-A; baseline results are from the original SCAM benchmark):
-
-| Method              | CER (%) ↓ |
-| ------------------- | --------: |
-| CRNN                | 13.91     |
-| VAN                 | **7.50**  |
-| HTR-VT              | 15.24     |
-| TrOCR-S             | 30.70     |
-| TrOCR-B             | 18.57     |
-| TrOCR-L             | 14.99     |
-| HTR-ConvText (Ours) | 11.67     |
+ 
 
 ## Quickstart
 
