@@ -8,6 +8,7 @@ import os
 import skimage
 import torch
 import numpy as np
+from pathlib import Path
 
 
 def SameTrCollate(batch, args):
@@ -52,6 +53,18 @@ class myLoadDS(Dataset):
         self.img_size = img_size
         if ralph is not None:
             self.ralph = ralph
+        elif dataset == 'scam_a':
+            # SCAM-A validation/test may contain characters absent from train.
+            # Build one alphabet across all split lists to keep encoding stable.
+            list_path = Path(flist)
+            all_files = list(self.fns)
+            for split_name in ('train', 'val', 'test', 'valid', 'validation'):
+                sibling = list_path.with_name(split_name + list_path.suffix)
+                if sibling.exists() and sibling != list_path:
+                    all_files.extend(get_files(str(sibling), dpath))
+            alph = get_alphabet(get_labels(sorted(set(all_files))))
+            self.ralph = dict(zip(alph.values(), alph.keys()))
+            self.alph = alph
         elif dataset is not None:
             if dataset == 'iam':
                 self.ralph = {

@@ -36,7 +36,7 @@ def get_args_parser() -> argparse.Namespace:
     # Data & Dataloading
     # ---------------------------------------------------------------------
     data = parser.add_argument_group('Data & Dataloading')
-    data.add_argument('--dataset', type=str, choices=['iam', 'read2016', 'lam', 'vnondb'],
+    data.add_argument('--dataset', type=str, choices=['iam', 'read2016', 'lam', 'vnondb', 'scam_a'],
                       help='Dataset choice')
     data.add_argument('--data-path', type=str, default='./data/iam/lines/',
                       help='Root directory containing image/line data')

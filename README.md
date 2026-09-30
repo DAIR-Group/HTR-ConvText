@@ -45,7 +45,7 @@ For more details, including ablation studies and theoretical proofs, please refe
 
 ## Performance
 
-We evaluated HTR-ConvText across four diverse datasets. The model achieves new SOTA results with the lowest Character Error Rate (CER) and Word Error Rate (WER) without requiring massive synthetic pre-training.
+We evaluated HTR-ConvText across IAM, LAM, READ2016, VNOnDB, and SCAM-A. The SCAM-A → SCAM-A result is compared with the original SCAM benchmark; lower CER is better.
 
 | Dataset  | Language   | Ours CER (%) | HTR-VT | OrigamiNet | TrOCR | CRNN  |
 | -------- | ---------- | ------------ | ------ | ---------- | ----- | ----- |
@@ -53,6 +53,19 @@ We evaluated HTR-ConvText across four diverse datasets. The model achieves new S
 | LAM      | Italian    | 2.7          | 2.8    | 3.0        | 3.6   | 3.8   |
 | READ2016 | German     | 3.6          | 3.9    | -          | -     | 4.7   |
 | VNOnDB   | Vietnamese | 3.45         | 4.26   | 7.6        | -     | 10.53 |
+| SCAM-A   | Coptic     | 11.67        | -      | -          | -     | -     |
+
+SCAM-A comparison (SCAM-A → SCAM-A; baseline results are from the original SCAM benchmark):
+
+| Method              | CER (%) ↓ |
+| ------------------- | --------: |
+| CRNN                | 13.91     |
+| VAN                 | **7.50**  |
+| HTR-VT              | 15.24     |
+| TrOCR-S             | 30.70     |
+| TrOCR-B             | 18.57     |
+| TrOCR-L             | 14.99     |
+| HTR-ConvText (Ours) | 11.67     |
 
 ## Quickstart
 
@@ -96,13 +109,19 @@ We provide split files (train.ln, val.ln, test.ln) for IAM, READ2016, LAM, and V
 
 ### Training
 
-We provide comprehensive scripts in the ./run/ directory. To train on the IAM dataset with the Textual Context Module (TCM) enabled:
+We provide scripts in `run/` for each dataset. To train on IAM with the Textual Context Module (TCM) enabled:
 
-```
-# Using the provided script
+```bash
+# IAM
 bash run/iam.sh
 
-# OR running directly via Python
+# SCAM-A, using data in the sibling HTR-ConvText_2 checkout
+bash run/scam_a.sh
+```
+
+The SCAM-A script expects `HTR-ConvText_2/data/SCAM-A/` to contain `train.ln`, `val.ln`, `test.ln`, and the corresponding split folders with line images and text files. To run IAM directly instead:
+
+```bash
 python train.py \
     --use-wandb \
     --dataset iam \
@@ -131,6 +150,18 @@ python test.py \
     --test-data-list data/iam/test.ln \
     --nb-cls 80
 ```
+
+### Uploading a SCAM-A checkpoint
+
+Training saves the best validation checkpoint at `output/htr-convtext-scam-a/best_CER.pth`. To publish it on Hugging Face, create a model repository under an account where you have write access, install and authenticate the Hub CLI, then upload the checkpoint:
+
+```bash
+pip install -U huggingface_hub
+hf auth login
+hf upload YOUR_USERNAME/HTR-ConvText-SCAM-A output/htr-convtext-scam-a/best_CER.pth best_CER.pth
+```
+
+The command uploads one checkpoint file. See the [Hugging Face upload guide](https://huggingface.co/docs/huggingface_hub/en/guides/upload) for details.
 
 ## Citation
 
